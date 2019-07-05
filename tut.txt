@@ -1,0 +1,14 @@
+* create routes to support authorization
+-   login
+-   logout
+-   strategies (google, facebook, etc...)
+
+* install passport middleware and the strategies to use
+- npm install passport
+- npm install passport-google-oauth20
+
+* get google credentials (Google+ API)
+* configure passport
+* redirect google auth requests to be handled by passport
+* set the redirect route for google auth
+* call the callback function by adding middleware to the route

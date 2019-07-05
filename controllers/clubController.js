@@ -1,9 +1,19 @@
 const router = require('express').Router();
 const dataService = require('../services/dataService');
+const passport = require('passport');
 
-
+// checking auth middleware
+const authCheck = (req, res, next) => {
+    if (!req.user) {
+        res.redirect('/auth/login');
+    } else {
+        next();
+    }
+};
 // Adding the endpoints
-router.get('/players', (req, res)=>{
+router.get('/players', authCheck, (req, res)=>{
+    console.log(req.user);
+    //res.json(req);
     dataService.queries.getAllDocuments('players')
     .then((data)=>{
         res.json(data);
@@ -30,7 +40,7 @@ router.get('/coaches', (req, res)=>{
     });
 })
 
-router.get('/teams', (req, res)=>{
+router.get('/teams', passport.authenticate('google'), (req, res)=>{
     dataService.queries.getAllDocuments('teams')
     .then((data)=>{
         res.json(data);

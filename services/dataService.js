@@ -13,6 +13,9 @@ const dataBase = {
     categories: require('../models/categories').model
 };
 
+// User model for Authentication
+const users = require('../models/users').model;
+
 module.exports = {
     connect: function(){
         return new Promise(function(resolve, reject){
@@ -32,6 +35,37 @@ module.exports = {
             return new Promise(
                 function(resolve, reject){
 
+                }
+            );
+        },
+        getGoogleById: function(id){
+            return new Promise(
+                function(resolve, reject){
+                    console.log("foundUser");
+                    users.findById(id).exec()
+                        .then((foundUser)=>{
+                            console.log(foundUser);
+                            resolve(foundUser);})
+                        .catch(reject());
+                }
+            );
+        },
+        checkOrSaveGoogleUser: function(user){
+            return new Promise(
+                function(resolve, reject){
+                    const query = { AuthProvider: user.AuthProvider }
+                    users.findOne(query).exec()
+                        .then(
+                            (foundUser) =>{
+                                if(foundUser){
+                                    resolve(foundUser)
+                                } else {
+                                    user.save()
+                                        .then(resolve(user))
+                                        .catch(reject(err));
+                                }
+                            })
+                        .catch(err => reject(err));
                 }
             );
         },
